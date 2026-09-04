@@ -25,11 +25,8 @@ jobs:
       - name: Run SQL in Supabase
         if: steps.changed-files.outputs.any_changed == 'true'
         env:
-          DB_PASS: ${{ secrets.SUPABASE_DB_PASSWORD }}
-          PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          SUPABASE_DB_URL="postgresql://postgres:${DB_PASS}@db.${PROJECT_ID}.supabase.co:5432/postgres"
-          
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "🚀 Выполняем скрипт: $file"
             psql "$SUPABASE_DB_URL" -f "$file"
