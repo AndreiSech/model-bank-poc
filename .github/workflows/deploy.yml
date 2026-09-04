@@ -1,0 +1,33 @@
+name: Deploy SQL Migrations
+
+on:
+  push:
+    branches:
+      - main # Запускаем только при попадании кода в ветку main
+    paths:
+      - 'migrations/*.sql' # И только если изменились файлы миграций
+
+jobs:
+  apply-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Забираем предыдущий коммит, чтобы найти разницу
+
+      - name: Get changed SQL files
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files: migrations/*.sql
+
+      - name: Run SQL in Supabase
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "🚀 Выполняем скрипт: $file"
+            psql "$SUPABASE_DB_URL" -f "$file"
+          done
