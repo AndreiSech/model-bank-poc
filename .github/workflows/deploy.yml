@@ -3,9 +3,9 @@ name: Deploy SQL Migrations
 on:
   push:
     branches:
-      - main # Запускаем только при попадании кода в ветку main
+      - main
     paths:
-      - 'migrations/*.sql' # И только если изменились файлы миграций
+      - 'migrations/*.sql'
 
 jobs:
   apply-sql:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # Забираем предыдущий коммит, чтобы найти разницу
+          fetch-depth: 2 
 
       - name: Get changed SQL files
         id: changed-files
@@ -25,8 +25,12 @@ jobs:
       - name: Run SQL in Supabase
         if: steps.changed-files.outputs.any_changed == 'true'
         env:
-          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          DB_PASS: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: |
+          # Динамически собираем URL из твоих секретов
+          SUPABASE_DB_URL="postgresql://postgres:${DB_PASS}@db.${PROJECT_ID}.supabase.co:5432/postgres"
+          
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "🚀 Выполняем скрипт: $file"
             psql "$SUPABASE_DB_URL" -f "$file"
