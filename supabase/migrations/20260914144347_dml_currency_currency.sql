@@ -1,0 +1,1 @@
+INSERT INTO "currency"."CURRENCY" ("id", "numeric_code", "no_of_decimals", "quotation_code", "interest_day_basis", "base_ccy_rank", "precious_metal", "decimals_name", "demo_field") VALUES ('EUR', 974, 2, 0, NULL, NULL, NULL, NULL, NULL);
