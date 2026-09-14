@@ -1,0 +1,3 @@
+DELETE FROM "currency"."CURRENCY" WHERE "id" = 'USD';
+INSERT INTO "currency"."CURRENCY" ("id", "numeric_code", "no_of_decimals", "quotation_code", "interest_day_basis", "base_ccy_rank", "precious_metal", "decimals_name", "descr_demo") VALUES ('XOF', 715, 0, 1, NULL, 2, NULL, NULL, NULL);
+UPDATE "currency"."CURRENCY" SET "numeric_code" = 978, "no_of_decimals" = 2, "quotation_code" = 0, "interest_day_basis" = NULL, "base_ccy_rank" = 1, "precious_metal" = True, "decimals_name" = NULL, "descr_demo" = NULL WHERE "id" = 'EUR';
